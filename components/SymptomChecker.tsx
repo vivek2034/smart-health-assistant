@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { analyzeSymptoms } from '../services/geminiService';
-import { SymptomAnalysis } from '../types';
+import { analyzeSymptoms } from '../services/geminiService.ts';
+import { SymptomAnalysis } from '../types.ts';
 
 const SymptomChecker: React.FC = () => {
   const [symptoms, setSymptoms] = useState('');

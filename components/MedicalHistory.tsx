@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { HealthLog } from '../types';
+import { HealthLog } from '../types.ts';
 
 interface MedicalHistoryProps {
   logs: HealthLog[];

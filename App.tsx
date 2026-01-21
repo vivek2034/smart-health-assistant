@@ -6,17 +6,18 @@ import Dashboard from './components/Dashboard.tsx';
 import SymptomChecker from './components/SymptomChecker.tsx';
 import MedicalHistory from './components/MedicalHistory.tsx';
 import Reminders from './components/Reminders.tsx';
+import Login from './components/Login.tsx';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewState>(ViewState.DASHBOARD);
-  const [user] = useState<Profile>({
-    id: 'u-123',
-    email: 'sarah.jones@example.com',
-    full_name: 'Sarah Jones',
-    updated_at: new Date().toISOString()
+  
+  // Dynamic User State with Persistence
+  const [user, setUser] = useState<Profile | null>(() => {
+    const saved = localStorage.getItem('v_user_profile');
+    return saved ? JSON.parse(saved) : null;
   });
 
-  // LocalStorage Persistence Layer
+  // LocalStorage Persistence Layer for Health Data
   const [logs, setLogs] = useState<HealthLog[]>(() => {
     const saved = localStorage.getItem('v_health_logs');
     return saved ? JSON.parse(saved) : [];
@@ -36,6 +37,14 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('v_reminders', JSON.stringify(reminders));
   }, [reminders]);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('v_user_profile', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('v_user_profile');
+    }
+  }, [user]);
 
   // Web Notification Scheduler
   useEffect(() => {
@@ -60,8 +69,24 @@ const App: React.FC = () => {
     return () => clearInterval(interval);
   }, [reminders]);
 
-  // Handlers for CRUD
+  // Handlers
+  const handleLogin = (fullName: string, email: string) => {
+    const newProfile: Profile = {
+      id: Math.random().toString(36).substr(2, 9),
+      full_name: fullName,
+      email: email,
+      updated_at: new Date().toISOString()
+    };
+    setUser(newProfile);
+  };
+
+  const handleSignOut = () => {
+    setUser(null);
+    setActiveView(ViewState.DASHBOARD);
+  };
+
   const handleAddLog = (data: Omit<HealthLog, 'id' | 'created_at' | 'user_id'>) => {
+    if (!user) return;
     const newLog: HealthLog = {
       ...data,
       id: Math.random().toString(36).substr(2, 9),
@@ -76,6 +101,7 @@ const App: React.FC = () => {
   };
 
   const handleAddReminder = (data: Omit<Reminder, 'id' | 'user_id' | 'is_active'>) => {
+    if (!user) return;
     const newReminder: Reminder = {
       ...data,
       id: Math.random().toString(36).substr(2, 9),
@@ -92,6 +118,10 @@ const App: React.FC = () => {
   const handleDeleteReminder = (id: string) => {
     setReminders(reminders.filter(r => r.id !== id));
   };
+
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   const renderContent = () => {
     switch (activeView) {
@@ -115,7 +145,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <Layout activeView={activeView} onNavigate={setActiveView} user={user}>
+    <Layout activeView={activeView} onNavigate={setActiveView} user={user} onSignOut={handleSignOut}>
       {renderContent()}
     </Layout>
   );

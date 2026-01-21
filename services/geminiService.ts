@@ -1,11 +1,11 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { SymptomAnalysis } from "../types";
-
-// Always use process.env.API_KEY directly for initialization as per @google/genai guidelines
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+import { SymptomAnalysis } from "../types.ts";
 
 export const analyzeSymptoms = async (symptoms: string): Promise<SymptomAnalysis> => {
+  // Initializing inside the function ensures the app doesn't crash on load if the key is pending
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
@@ -38,11 +38,10 @@ export const analyzeSymptoms = async (symptoms: string): Promise<SymptomAnalysis
       }
     });
 
-    // Access the text content directly using the .text property
     const result = JSON.parse(response.text || '{}');
     return result as SymptomAnalysis;
   } catch (error) {
     console.error("Gemini API Error:", error);
-    throw new Error("Failed to analyze symptoms. Please try again later.");
+    throw new Error("Failed to analyze symptoms. Please check if your API Key is correctly configured in the hosting provider's environment variables.");
   }
 };

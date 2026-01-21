@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MedicalRecord, Reminder } from '../types';
+import { MedicalRecord, Reminder } from '../types.ts';
 
 interface DashboardProps {
   records: MedicalRecord[];

@@ -11,13 +11,11 @@ import Login from './components/Login.tsx';
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewState>(ViewState.DASHBOARD);
   
-  // Dynamic User State with Persistence
   const [user, setUser] = useState<Profile | null>(() => {
     const saved = localStorage.getItem('v_user_profile');
     return saved ? JSON.parse(saved) : null;
   });
 
-  // LocalStorage Persistence Layer for Health Data
   const [logs, setLogs] = useState<HealthLog[]>(() => {
     const saved = localStorage.getItem('v_health_logs');
     return saved ? JSON.parse(saved) : [];
@@ -69,12 +67,12 @@ const App: React.FC = () => {
     return () => clearInterval(interval);
   }, [reminders]);
 
-  // Handlers
-  const handleLogin = (fullName: string, email: string) => {
+  const handleLogin = (fullName: string, email: string, avatar?: string) => {
     const newProfile: Profile = {
       id: Math.random().toString(36).substr(2, 9),
       full_name: fullName,
       email: email,
+      avatar_url: avatar,
       updated_at: new Date().toISOString()
     };
     setUser(newProfile);

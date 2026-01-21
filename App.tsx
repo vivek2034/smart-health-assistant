@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { HealthLog, Reminder, ViewState, Profile, MedicalRecord } from './types';
-import Layout from './components/Layout';
-import Dashboard from './components/Dashboard';
-import SymptomChecker from './components/SymptomChecker';
-import MedicalHistory from './components/MedicalHistory';
-import Reminders from './components/Reminders';
+import { HealthLog, Reminder, ViewState, Profile, MedicalRecord } from './types.ts';
+import Layout from './components/Layout.tsx';
+import Dashboard from './components/Dashboard.tsx';
+import SymptomChecker from './components/SymptomChecker.tsx';
+import MedicalHistory from './components/MedicalHistory.tsx';
+import Reminders from './components/Reminders.tsx';
 
 const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewState>(ViewState.DASHBOARD);
@@ -96,7 +96,6 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (activeView) {
       case ViewState.DASHBOARD:
-        // Map logs to MedicalRecord interface format for Dashboard component
         const records: MedicalRecord[] = logs.map(l => ({
           id: l.id,
           condition: l.title,

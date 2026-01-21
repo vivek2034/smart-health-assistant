@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { Reminder } from '../types';
+import React, { useState } from 'react';
+import { Reminder } from '../types.ts';
 
 interface RemindersProps {
   reminders: Reminder[];

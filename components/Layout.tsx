@@ -1,15 +1,16 @@
 
 import React from 'react';
-import { ViewState } from '../types.ts';
+import { ViewState, Profile } from '../types.ts';
 
 interface LayoutProps {
   children: React.ReactNode;
   activeView: ViewState;
   onNavigate: (view: ViewState) => void;
-  user: any;
+  user: Profile;
+  onSignOut: () => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, activeView, onNavigate, user }) => {
+const Layout: React.FC<LayoutProps> = ({ children, activeView, onNavigate, user, onSignOut }) => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-slate-50">
       <nav className="w-full md:w-64 bg-white border-r border-slate-200 flex flex-col sticky top-0 h-auto md:h-screen z-50">
@@ -47,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onNavigate, user 
         <div className="mt-auto p-6 border-t border-slate-100">
           <div className="flex items-center gap-3 mb-4">
             <img
-              src={user?.avatar_url || `https://ui-avatars.com/api/?name=${user?.full_name || 'User'}&background=0D8ABC&color=fff`}
+              src={user?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'User')}&background=0D8ABC&color=fff`}
               alt="Profile"
               className="w-10 h-10 rounded-full border border-slate-200"
             />
@@ -56,7 +57,10 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onNavigate, user 
               <p className="text-xs text-slate-500 truncate">{user?.email}</p>
             </div>
           </div>
-          <button className="w-full text-left text-xs font-semibold text-red-500 hover:text-red-600 flex items-center gap-2">
+          <button 
+            onClick={onSignOut}
+            className="w-full text-left text-xs font-semibold text-red-500 hover:text-red-600 flex items-center gap-2 transition-colors p-2 hover:bg-red-50 rounded-lg"
+          >
             <i className="fas fa-sign-out-alt"></i>
             Sign Out
           </button>

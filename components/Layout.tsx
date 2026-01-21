@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ViewState } from '../types';
+import { ViewState } from '../types.ts';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +12,6 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, activeView, onNavigate, user }) => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-slate-50">
-      {/* Sidebar Navigation */}
       <nav className="w-full md:w-64 bg-white border-r border-slate-200 flex flex-col sticky top-0 h-auto md:h-screen z-50">
         <div className="p-6">
           <div className="flex items-center gap-2 mb-8">
@@ -64,7 +63,6 @@ const Layout: React.FC<LayoutProps> = ({ children, activeView, onNavigate, user 
         </div>
       </nav>
 
-      {/* Main Content Area */}
       <main className="flex-1 p-4 md:p-8 overflow-y-auto">
         <div className="max-w-5xl mx-auto">
           {children}
